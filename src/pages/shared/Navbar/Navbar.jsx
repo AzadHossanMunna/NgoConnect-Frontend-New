@@ -1,12 +1,26 @@
 import React from 'react';
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import NgoconnectLogo from '../NgoconnectLogo/NgoconnectLogo';
+import useAuth from '../../../hooks/useAuth';
 
 const Navbar = () => {
+   const {user, logOut}  = useAuth();
+   const handleLogOut=()=>{
+      logOut()
+      .then(result=>{console.log(result)})
+      .catch(error=>console.log(error))
+   }
     const navItems =<>
     <li><NavLink to="/">Home</NavLink></li>  
+    <li><NavLink to="/coverage">Coverage</NavLink></li>  
+    <li><NavLink to="/sendDonation">Donate</NavLink></li>  
     <li><NavLink to="/about">About Us</NavLink></li>  
-     
+    <li><NavLink to="/campaign">Campaign</NavLink></li> 
+     {
+            user && <>
+                <li><NavLink to="/dashboard">Dashboard</NavLink></li>
+            </>
+        }
     </>
     return (
         <div className="navbar bg-base-100 shadow-sm">
@@ -21,9 +35,10 @@ const Navbar = () => {
         {navItems}
       </ul>
     </div>
-    <a className="btn btn-ghost text-xl">
-        <NgoconnectLogo></NgoconnectLogo>
-    </a>
+    <Link to="/" className="btn btn-ghost text-xl">
+  NGOConnect
+</Link>
+
   </div>
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal px-1">
@@ -31,7 +46,15 @@ const Navbar = () => {
     </ul>
   </div>
   <div className="navbar-end">
-    <a className="btn">Button</a>
+    {
+      user?<button onClick={handleLogOut} className='btn btn-primary text-black'>Log Out</button>
+      :
+      
+      <Link to="/login" className="btn bg-green-500 hover:bg-green-600 border-green-500 text-white">
+  Login
+</Link>
+    }
+
   </div>
 </div>
     );
