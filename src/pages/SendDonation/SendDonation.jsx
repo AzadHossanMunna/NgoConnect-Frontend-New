@@ -1,17 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import useAuth from "../../hooks/useAuth";
+import { axiosSecure } from "../../hooks/useAxiosSecure";
+import axios from "axios";
+import { API_BASE_URL, API_ENDPOINTS } from "../../config/api.config";
+import { useSearchParams } from "react-router-dom";
+import { FaLock, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 export default function DonateForm() {
+  const { user } = useAuth();
   const [amount, setAmount] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [selectedCause, setSelectedCause] = useState("Food");
+  const [selectedCampaign, setSelectedCampaign] = useState(""); // Default to "" (General Fund)
+  const [campaigns, setCampaigns] = useState([]);
+  
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  const [searchParams] = useSearchParams();
+  const campaignIdFromUrl = searchParams.get("campaign");
+
+  useEffect(() => {
+    // Pre-fill user data if logged in
+    if (user) {
+      setName(user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : '');
+      setEmail(user.email || '');
+    }
+  }, [user]);
+
+  useEffect(() => {
+    // Fetch Campaigns for Dropdown
+    const fetchCampaigns = async () => {
+        try {
+            // Using public instance as this page might be accessible to guests
+            const res = await axios.get(`${API_BASE_URL}/api/projects/campaigns/`);
+            if (Array.isArray(res.data)) {
+                setCampaigns(res.data);
+            } else if (res.data.results) {
+                setCampaigns(res.data.results);
+            }
+        } catch (error) {
+            console.error("Failed to load campaigns", error);
+        }
+    };
+    fetchCampaigns();
+  }, []);
+
+  useEffect(() => {
+    // Set campaign from URL if available
+    if (campaignIdFromUrl) {
+        setSelectedCampaign(parseInt(campaignIdFromUrl));
+    }
+  }, [campaignIdFromUrl]);
 
   const suggestedAmounts = [500, 1000, 2000, 5000];
-  const causes = ["Food", "Education", "Medical Aid", "Emergency Relief", "General Fund"];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,39 +66,35 @@ export default function DonateForm() {
       amount: Number(amount),
       guest_name: name,
       guest_email: email,
-      message: `${selectedCause}: ${message}`,
+      ...(selectedCampaign ? { campaign_id: selectedCampaign } : {})
     };
 
-    console.log("SENDING PAYLOAD 👉", payload);
+    console.log("SENDING DONATION PAYLOAD 👉", payload);
 
     try {
-      const res = await fetch(
-        "https://ngoconeect-backend.onrender.com/api/donations/initiate/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      const data = await res.json();
-      console.log("BACKEND RESPONSE 👉", data);
-
-      if (!res.ok) {
-        throw new Error(data?.detail || data?.error || "Something went wrong");
+      let res;
+      // Use secure axios if user is logged in (to potentially link donation to user account)
+      // If user is guest, use public axios
+      if (user) {
+         res = await axiosSecure.post(API_ENDPOINTS.DONATION_INITIATE, payload);
+      } else {
+         res = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.DONATION_INITIATE}`, payload);
       }
 
-      setResponse(data);
-      // Reset form
-      setAmount("");
-      setName("");
-      setEmail("");
-      setMessage("");
-      setSelectedCause("Food");
+      const data = res.data;
+      console.log("PAYMENT RESPONSE 👉", data);
+
+      if (data.payment_url) {
+          // Redirect to SSLCommerz or Gateway
+          window.location.replace(data.payment_url);
+      } else {
+          setResponse(data); 
+          setAmount("");
+      }
+
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      setError(err.response?.data?.detail || err.response?.data?.error || err.message || "Failed to initiate payment");
     } finally {
       setIsLoading(false);
     }
@@ -96,37 +135,6 @@ export default function DonateForm() {
           line-height: 1.5;
         }
 
-        .progress-section {
-          background: #f1f5f9;
-          padding: 20px;
-          border-radius: 12px;
-          margin-bottom: 25px;
-        }
-
-        .progress-text {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 10px;
-          font-size: 14px;
-          color: #475569;
-        }
-
-        .progress-bar {
-          width: 100%;
-          height: 10px;
-          background: #e2e8f0;
-          border-radius: 5px;
-          overflow: hidden;
-        }
-
-        .progress-fill {
-          height: 100%;
-          background: linear-gradient(90deg, #10b981, #34d399);
-          border-radius: 5px;
-          transition: width 0.3s ease;
-          width: 46%;
-        }
-
         .form-group {
           margin-bottom: 24px;
         }
@@ -137,39 +145,6 @@ export default function DonateForm() {
           font-weight: 600;
           color: #1e293b;
           font-size: 14px;
-        }
-
-        .cause-buttons {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 8px;
-        }
-
-        .cause-btn {
-          padding: 10px 18px;
-          border: 2px solid #e2e8f0;
-          border-radius: 10px;
-          background: white;
-          color: #475569;
-          font-size: 14px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          flex: 1;
-          min-width: 100px;
-          text-align: center;
-        }
-
-        .cause-btn:hover {
-          border-color: #94a3b8;
-        }
-
-        .cause-btn.active {
-          background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
-          color: white;
-          border-color: #2d6a4f;
-          box-shadow: 0 4px 12px rgba(45, 106, 79, 0.2);
         }
 
         .amount-buttons {
@@ -202,7 +177,7 @@ export default function DonateForm() {
           box-shadow: 0 4px 12px rgba(45, 106, 79, 0.2);
         }
 
-        .form-input {
+        .form-input, .form-select {
           width: 100%;
           padding: 14px 16px;
           border: 2px solid #e2e8f0;
@@ -211,9 +186,10 @@ export default function DonateForm() {
           color: #1e293b;
           transition: all 0.2s ease;
           box-sizing: border-box;
+          background-color: white;
         }
 
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
           outline: none;
           border-color: #40916c;
           box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.1);
@@ -221,12 +197,6 @@ export default function DonateForm() {
 
         .form-input::placeholder {
           color: #94a3b8;
-        }
-
-        textarea.form-input {
-          resize: vertical;
-          min-height: 100px;
-          font-family: 'Inter', sans-serif;
         }
 
         .submit-btn {
@@ -269,72 +239,6 @@ export default function DonateForm() {
           to { transform: rotate(360deg); }
         }
 
-        .stories-section {
-          margin-top: 40px;
-          padding: 25px;
-          background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-          border-radius: 15px;
-          border-left: 4px solid #0ea5e9;
-        }
-
-        .stories-section h3 {
-          color: #0369a1;
-          margin-bottom: 15px;
-          font-size: 20px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-
-        .story {
-          padding: 12px;
-          background: white;
-          border-radius: 8px;
-          margin-bottom: 12px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-          border-left: 3px solid #10b981;
-        }
-
-        .story:last-child {
-          margin-bottom: 0;
-        }
-
-        .response-box {
-          margin-top: 30px;
-          padding: 20px;
-          background: #f0fdf4;
-          border-radius: 12px;
-          border: 2px solid #bbf7d0;
-        }
-
-        .response-title {
-          color: #166534;
-          font-weight: 600;
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .payment-url {
-          margin-top: 15px;
-          padding: 12px;
-          background: #dcfce7;
-          border-radius: 8px;
-          word-break: break-all;
-          font-size: 14px;
-        }
-
-        .payment-url a {
-          color: #166534;
-          font-weight: 600;
-          text-decoration: none;
-        }
-
-        .payment-url a:hover {
-          text-decoration: underline;
-        }
-
         .error-box {
           margin-top: 20px;
           padding: 15px;
@@ -343,6 +247,9 @@ export default function DonateForm() {
           border: 2px solid #fecaca;
           color: #dc2626;
           font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 10px;
         }
 
         .secure-badge {
@@ -368,10 +275,6 @@ export default function DonateForm() {
           .amount-buttons {
             grid-template-columns: repeat(2, 1fr);
           }
-          
-          .cause-buttons {
-            flex-direction: column;
-          }
         }
       `}</style>
 
@@ -380,35 +283,23 @@ export default function DonateForm() {
         <p>Your donation helps us create meaningful change in communities</p>
       </div>
 
-      <div className="progress-section">
-        <div className="progress-text">
-          <span>Goal: ₹50,000</span>
-          <span>Raised: ₹23,000</span>
-        </div>
-        <div className="progress-bar">
-          <div className="progress-fill"></div>
-        </div>
-      </div>
-
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="form-label">Select Cause</label>
-          <div className="cause-buttons">
-            {causes.map((cause) => (
-              <button
-                type="button"
-                key={cause}
-                className={`cause-btn ${selectedCause === cause ? 'active' : ''}`}
-                onClick={() => setSelectedCause(cause)}
-              >
-                {cause}
-              </button>
+          <label className="form-label">Select Campaign</label>
+          <select 
+            className="form-select"
+            value={selectedCampaign}
+            onChange={(e) => setSelectedCampaign(e.target.value)}
+          >
+            <option value="">General Fund (Most Flexible)</option>
+            {campaigns.map(c => (
+                <option key={c.id} value={c.id}>{c.title}</option>
             ))}
-          </div>
+          </select>
         </div>
 
         <div className="form-group">
-          <label className="form-label">Donation Amount (₹)</label>
+          <label className="form-label">Donation Amount (BDT)</label>
           <div className="amount-buttons">
             {suggestedAmounts.map((amt) => (
               <button
@@ -417,23 +308,23 @@ export default function DonateForm() {
                 className={`amount-btn ${amount == amt ? 'active' : ''}`}
                 onClick={() => setAmount(amt)}
               >
-                ₹{amt.toLocaleString()}
+                {amt.toLocaleString()} BDT
               </button>
             ))}
           </div>
           <input
             type="number"
             className="form-input"
-            placeholder="Custom Amount (₹)"
+            placeholder="Custom Amount (BDT)"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             required
-            min="1"
+            min="10"
           />
         </div>
 
         <div className="form-group">
-          <label className="form-label">Your Name</label>
+          <label className="form-label">Full Name</label>
           <input
             type="text"
             className="form-input"
@@ -456,17 +347,6 @@ export default function DonateForm() {
           />
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Message (Optional)</label>
-          <textarea
-            className="form-input"
-            placeholder="Share why you're donating or any specific instructions..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            rows={3}
-          />
-        </div>
-
         <button 
           type="submit" 
           className="submit-btn"
@@ -475,64 +355,28 @@ export default function DonateForm() {
           {isLoading ? (
             <>
               <div className="spinner"></div>
-              Processing Donation...
+              Processing...
             </>
           ) : (
-            <>
+             <>
               <span>Donate Now</span>
-              {amount && <span>₹{Number(amount).toLocaleString()}</span>}
+              {amount && <span>{Number(amount).toLocaleString()} BDT</span>}
             </>
           )}
         </button>
 
         <div className="secure-badge">
-          <span className="icon">🔒</span>
+          <FaLock className="text-gray-400" />
           <span>Secure SSL Encryption • Your data is protected</span>
         </div>
       </form>
 
       {error && (
         <div className="error-box">
-          <strong>Error:</strong> {error}
+          <FaExclamationCircle />
+          <span>{error}</span>
         </div>
       )}
-
-      {response && (
-        <div className="response-box">
-          <div className="response-title">
-            <span className="icon">✅</span>
-            Donation Initiated Successfully!
-          </div>
-          <p>Your payment has been initialized. You will be redirected to the payment gateway.</p>
-          {response.payment_url && (
-            <div className="payment-url">
-              <strong>Payment URL:</strong><br />
-              <a href={response.payment_url} target="_blank" rel="noopener noreferrer">
-                {response.payment_url}
-              </a>
-              <p style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
-                Click the link above to complete your payment. This page will automatically redirect in 5 seconds...
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      <div className="stories-section">
-        <h3>
-          <span className="icon">✨</span>
-          Stories of Impact
-        </h3>
-        <div className="story">
-          "Thanks to generous donors, 20 children received school supplies and uniforms last month!"
-        </div>
-        <div className="story">
-          "Your support helped provide clean drinking water to 50 families in rural areas."
-        </div>
-        <div className="story">
-          "Emergency medical aid was provided to 15 patients through your donations."
-        </div>
-      </div>
     </div>
   );
 }

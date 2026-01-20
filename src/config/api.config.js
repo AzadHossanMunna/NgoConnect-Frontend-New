@@ -19,6 +19,15 @@ export const API_ENDPOINTS = {
 
   // Projects / Campaigns
   CAMPAIGNS: '/api/projects/campaigns/',
+  EVENTS: '/api/projects/events/',
+
+  // Donations
+  DONATION_INITIATE: '/api/donations/initiate/',
+  DONATION_PUBLIC: '/api/donations/public/',
+  DONATION_ADMIN: '/api/donations/admin/',
+
+  // Dashboard
+  DASHBOARD_SUMMARY: '/api/user/dashboard/summary/',
 };
 
 // Storage keys

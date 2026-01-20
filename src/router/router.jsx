@@ -18,6 +18,16 @@ import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
 import ApplyVolunteer from "../pages/Dashboard/Volunteer/ApplyVolunteer";
 import MyTimeLogs from "../pages/Dashboard/Volunteer/MyTimeLogs";
 import ManageVolunteers from "../pages/Dashboard/ManageVolunteers/ManageVolunteers";
+import ManageTasks from "../pages/Dashboard/ManageTasks/ManageTasks";
+import MyTasks from "../pages/Dashboard/Volunteer/MyTasks";
+import DonationRequests from "../pages/Dashboard/DonationRequests/DonationRequests";
+import ManageEvents from "../pages/Dashboard/ManageEvents/ManageEvents";
+import VolunteerEvents from "../pages/Dashboard/VolunteerEvents/VolunteerEvents";
+
+import PaymentSuccess from "../pages/Payment/PaymentSuccess";
+import PaymentFail from "../pages/Payment/PaymentFail";
+
+import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome"; // Import the component
 
 export const router = createBrowserRouter([
   {
@@ -42,7 +52,19 @@ export const router = createBrowserRouter([
       },
       {
         path: 'SendDonation',
-        element: <PrivateRoute><SendDonation /></PrivateRoute> // kept as is
+        element: <SendDonation /> 
+      },
+      {
+        path: 'payment/success',
+        element: <PaymentSuccess />
+      },
+      {
+        path: 'payment/fail',
+        element: <PaymentFail />
+      },
+      {
+        path: 'payment/cancel', // Reuse fail for cancel or create new if needed
+        element: <PaymentFail /> 
       }
     ],
   },
@@ -71,8 +93,16 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
+        index: true,
+        element: <DashboardHome />
+      },
+      {
         path: 'myDonations',
         element: <MyDonations />
+      },
+      {
+        path: 'donation-requests',
+        element: <DonationRequests />
       },
       {
         path: 'profile',
@@ -105,6 +135,22 @@ export const router = createBrowserRouter([
       {
         path: 'volunteers',
         element: <ManageVolunteers />
+      },
+      {
+        path: 'tasks',
+        element: <ManageTasks />
+      },
+      {
+        path: 'volunteer/checklist',
+        element: <MyTasks />
+      },
+      {
+        path: 'events/manage',
+        element: <ManageEvents />
+      },
+      {
+        path: 'events',
+        element: <VolunteerEvents />
       }
     ],
   }

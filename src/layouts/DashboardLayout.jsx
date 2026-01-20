@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { FaHandsHelping, FaDonate, FaUser, FaBullhorn, FaUsers, FaHandHoldingHeart, FaClock } from "react-icons/fa";
+import { FaHandsHelping, FaDonate, FaUser, FaBullhorn, FaUsers, FaHandHoldingHeart, FaClock, FaTasks, FaClipboardList, FaCalendarDay, FaCalendarCheck } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import useAuth from "../hooks/useAuth";
 
@@ -79,6 +79,24 @@ const DashboardLayout = () => {
               </li>
             )}
 
+            {isAdminOrManager && (
+              <li>
+                <NavLink to="/dashboard/tasks" className={navLinkClass}>
+                  <FaTasks />
+                  Manage Tasks
+                </NavLink>
+              </li>
+            )}
+
+            {isAdminOrManager && (
+              <li>
+                <NavLink to="/dashboard/events/manage" className={navLinkClass}>
+                  <FaCalendarDay />
+                  Manage Events
+                </NavLink>
+              </li>
+            )}
+
             {isAdmin && (
               <li>
                 <NavLink to="/dashboard/users" className={navLinkClass}>
@@ -98,12 +116,26 @@ const DashboardLayout = () => {
             )}
 
             {isVolunteer && (
-              <li>
-                <NavLink to="/dashboard/volunteer/logs" className={navLinkClass}>
-                  <FaClock />
-                  My Time Logs
-                </NavLink>
-              </li>
+              <>
+                <li>
+                  <NavLink to="/dashboard/events" className={navLinkClass}>
+                    <FaCalendarCheck />
+                    Events
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/dashboard/volunteer/checklist" className={navLinkClass}>
+                    <FaClipboardList />
+                    My Tasks
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/dashboard/volunteer/logs" className={navLinkClass}>
+                    <FaClock />
+                    My Time Logs
+                  </NavLink>
+                </li>
+              </>
             )}
 
             {isGeneralUser && (
@@ -122,15 +154,17 @@ const DashboardLayout = () => {
               </NavLink>
             </li>
 
-            <li>
-              <NavLink
-                to="/dashboard/donation-requests"
-                className={navLinkClass}
-              >
-                <FaHandsHelping />
-                Donation Requests
-              </NavLink>
-            </li>
+            {isAdminOrManager && (
+              <li>
+                <NavLink
+                  to="/dashboard/donation-requests"
+                  className={navLinkClass}
+                >
+                  <FaHandsHelping />
+                  Donation Requests
+                </NavLink>
+              </li>
+            )}
 
             <li>
               <NavLink to="/dashboard/profile" className={navLinkClass}>

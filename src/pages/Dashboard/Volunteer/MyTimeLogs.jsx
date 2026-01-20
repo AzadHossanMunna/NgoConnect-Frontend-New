@@ -5,20 +5,42 @@ import Swal from 'sweetalert2';
 
 const MyTimeLogs = () => {
     const [logs, setLogs] = useState([]);
+    const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const axiosSecure = useAxiosSecure();
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm();
     
-    // We can't pre-fill task ID without a task list. 
-    // Assuming user knows Task ID or we will just use a simple input for now as per payload.
-    // Ideally we would fetch tasks first.
-
     useEffect(() => {
-        fetchTimeLogs();
+        fetchInitialData();
     }, []);
 
-    const fetchTimeLogs = async () => {
+    const fetchInitialData = async () => {
         setLoading(true);
+        try {
+            const [logsRes, tasksRes] = await Promise.all([
+                axiosSecure.get('/api/volunteer/time-logs/'),
+                axiosSecure.get('/api/projects/tasks/?mine=true')
+            ]);
+
+            if (Array.isArray(logsRes.data)) {
+                setLogs(logsRes.data);
+            } else if (logsRes.data.results) {
+                setLogs(logsRes.data.results);
+            }
+
+            if (Array.isArray(tasksRes.data)) {
+                setTasks(tasksRes.data);
+            } else if (tasksRes.data.results) {
+                setTasks(tasksRes.data.results);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchTimeLogs = async () => {
         try {
             const res = await axiosSecure.get('/api/volunteer/time-logs/');
             if (Array.isArray(res.data)) {
@@ -28,14 +50,12 @@ const MyTimeLogs = () => {
             }
         } catch (error) {
             console.error("Error fetching time logs:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
     const onSubmit = async (data) => {
         try {
-            // Ensure dates are in ISO format if needed, but input type="datetime-local" needs some formatting often
+            // Ensure dates are in ISO format
             const payload = {
                 task: data.task,
                 start_time: new Date(data.start_time).toISOString(),
@@ -53,7 +73,6 @@ const MyTimeLogs = () => {
         }
     };
 
-    // Helper to format duration or time difference
     const formatDuration = (start, end) => {
         const s = new Date(start);
         const e = new Date(end);
@@ -69,14 +88,19 @@ const MyTimeLogs = () => {
                 <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-3 gap-4 custom-form">
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text">Task ID</span>
+                            <span className="label-text">Select Task</span>
                         </label>
-                        <input 
-                            type="number" 
-                            className="input input-bordered" 
-                            placeholder="Task ID"
-                            {...register('task', { required: 'Task ID is required' })}
-                        />
+                        <select 
+                            className="select select-bordered w-full" 
+                            {...register('task', { required: 'Please select a task' })}
+                        >
+                            <option value="">-- Choose Task --</option>
+                            {tasks.map(task => (
+                                <option key={task.id} value={task.id}>
+                                    {task.title}
+                                </option>
+                            ))}
+                        </select>
                         {errors.task && <span className="text-red-500 text-sm">{errors.task.message}</span>}
                     </div>
 
@@ -99,7 +123,16 @@ const MyTimeLogs = () => {
                         <input 
                             type="datetime-local" 
                             className="input input-bordered" 
-                            {...register('end_time', { required: 'End time is required' })}
+                            {...register('end_time', { 
+                                required: 'End time is required',
+                                validate: {
+                                    afterStart: (value) => {
+                                        const start = getValues('start_time');
+                                        return !start || new Date(value) >= new Date(start) || 'End time cannot be before start time';
+                                    },
+                                    notFuture: (value) => new Date(value) <= new Date() || 'End time cannot be in the future'
+                                }
+                            })}
                         />
                          {errors.end_time && <span className="text-red-500 text-sm">{errors.end_time.message}</span>}
                     </div>

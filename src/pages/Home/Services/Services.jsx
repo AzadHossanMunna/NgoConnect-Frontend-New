@@ -15,65 +15,65 @@ const servicesData = [
   {
     icon: FaUtensils,
     title: "Food Support",
-    description: "Providing meals and essential groceries to families in need.",
+    description: "Running campaigns to provide meals to families in need.",
     extraDetails:
-      "We partner with local food banks and volunteers to distribute meals, groceries, and essential nutrition packs to families who need them most.",
+      "We partner with local communities to organize food distribution events for families who need them most.",
   },
   {
     icon: FaTint,
-    title: "Blood Donation",
-    description: "Connecting donors with patients to ensure timely blood support.",
+    title: "Blood Donation Camps",
+    description: "Organizing blood donation events to support local hospitals.",
     extraDetails:
-      "NGOConnect organizes regular blood donation drives and connects emergency donors with hospitals in critical situations.",
+      "NGOConnect organizes regular blood donation drives where volunteers can participate and donors can contribute to the cause.",
   },
   {
     icon: FaBroom,
     title: "Cleanliness Drives",
     description: "Organizing community cleaning campaigns to create healthier spaces.",
     extraDetails:
-      "We arrange city and community cleaning programs to promote public hygiene, waste management, and environmental awareness.",
+      "Our volunteers participate in city and community cleaning programs to promote public hygiene and environmental awareness.",
   },
   {
     icon: FaHandHoldingHeart,
-    title: "Medical Aid",
-    description: "Supporting people with basic medicines, checkups, and emergency help.",
+    title: "Medical Campaigns",
+    description: "Fundraising for basic medicines and emergency medical help.",
     extraDetails:
-      "NGOConnect provides free medical camps, basic medicine supplies, and arranges emergency treatment for people in need.",
+      "NGOConnect runs specific campaigns to provide financial support for medical emergencies and basic healthcare needs.",
   },
   {
     icon: FaUserShield,
-    title: "Safety & Protection",
-    description: "Helping vulnerable communities stay protected in tough situations.",
+    title: "Disaster Relief",
+    description: "Coordinating support for communities during tough situations.",
     extraDetails:
-      "We support and protect homeless individuals, disaster victims, and those facing unsafe living conditions.",
+      "We launch emergency campaigns to support disaster victims with essential supplies and funds.",
   },
   {
     icon: FaBookReader,
-    title: "Education Support",
-    description: "Providing learning resources for underprivileged students.",
+    title: "Education Fundraising",
+    description: "Raising funds to support student education and supplies.",
     extraDetails:
-      "Educational kits, tutoring support, books, and digital learning resources are provided to underprivileged children.",
+      "We run dedicated campaigns to collect funds for educational kits, books, and school resources for underprivileged children.",
   },
   {
     icon: FaHandsHelping,
-    title: "Volunteer Support",
-    description: "Connecting volunteers with social causes that match their interests.",
+    title: "Volunteer Network",
+    description: "Connecting volunteers with social causes that match their skills.",
     extraDetails:
-      "We manage a volunteer network that helps match people with NGOs based on their skills, time, and passion.",
+      "We manage a volunteer network where individuals can sign up, manage tasks, and log their service hours.",
   },
   {
     icon: FaLeaf,
     title: "Environment Care",
-    description: "Tree planting, waste management, and green awareness campaigns.",
+    description: "Tree planting events and green awareness campaigns.",
     extraDetails:
-      "NGOConnect conducts tree plantation drives, eco-awareness events, and campaigns promoting a green future.",
+      "NGOConnect conducts tree plantation drives and eco-awareness events promoting a greener future.",
   },
   {
     icon: FaPeopleCarry,
-    title: "Community Assistance",
-    description: "Helping people during disasters and supporting local communities.",
+    title: "Community Events",
+    description: "Events to bring people together for social good.",
     extraDetails:
-      "We offer emergency relief, shelter setup, and community rebuilding programs during natural disasters.",
+      " We organize various community events to foster solidarity and support local development initiatives.",
   },
 ];
 

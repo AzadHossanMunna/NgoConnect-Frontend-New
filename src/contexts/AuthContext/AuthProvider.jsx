@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import axios from 'axios';
+import { axiosSecure } from '../../hooks/useAxiosSecure';
 import { API_BASE_URL, API_ENDPOINTS, STORAGE_KEYS } from '../../config/api.config';
 
 const AuthProvider = ({ children }) => {
@@ -9,16 +10,8 @@ const AuthProvider = ({ children }) => {
 
   // Function to fetch current user profile and update state
   const fetchUserProfile = async () => {
-    const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-    if (!accessToken) {
-       setUser(null);
-       return;
-    }
-
     try {
-      const response = await axios.get(`${API_BASE_URL}${API_ENDPOINTS.PROFILE}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axiosSecure.get(API_ENDPOINTS.PROFILE);
       const userData = response.data;
       setUser(userData);
       localStorage.setItem(STORAGE_KEYS.USER_EMAIL, userData.email);
@@ -36,10 +29,8 @@ const AuthProvider = ({ children }) => {
       
       if (accessToken) {
         try {
-          // Fetch fresh user profile
-          const response = await axios.get(`${API_BASE_URL}${API_ENDPOINTS.PROFILE}`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          });
+          // Fetch fresh user profile using axiosSecure to handle token refresh automatically
+          const response = await axiosSecure.get(API_ENDPOINTS.PROFILE);
           const userData = response.data;
           
           setUser(userData);
@@ -48,18 +39,18 @@ const AuthProvider = ({ children }) => {
           localStorage.setItem(STORAGE_KEYS.USER_ROLE, userData.role);
         } catch (error) {
           console.error("Failed to fetch profile during init", error);
-          // If profile fetch fails (e.g. 401), useAxiosSecure handles it globally,
-          // but here we are using raw axios.
-          // Fallback to localStorage data if available preventing immediate logout on network glitch
-          const email = localStorage.getItem(STORAGE_KEYS.USER_EMAIL);
-          const role = localStorage.getItem(STORAGE_KEYS.USER_ROLE);
-          if (email) {
-             setUser({ email, role, ...user }); // Keep minimal info
-          } else {
-             // If token is invalid/expired and we have no user data, we effectively logout
-             localStorage.clear();
-             setUser(null);
-          }
+          // If profile fetch fails (even after refresh attempt by axiosSecure), 
+          // we assume the session is invalid.
+          
+          // Fallback to localStorage data if available preventing immediate logout on network glitch?
+          // No, if axiosSecure failed (401), it means refresh also failed.
+          // We should clear session.
+          
+          // However, axiosSecure interceptor redirects to /login on failure.
+          // So we might not even reach here if it redirects.
+          // But just in case:
+          localStorage.clear();
+          setUser(null);
         }
       }
       setLoading(false);

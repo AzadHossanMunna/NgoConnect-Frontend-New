@@ -10,13 +10,13 @@ const steps = [
   },
   {
     icon: <HeartHandshake className="w-12 h-12 text-green-700" />,
-    title: "2. NGOConnect Verifies",
-    desc: "We check each case, verify the need, and make sure every donation goes to the right place.",
+    title: "2. Campaigns Verified",
+    desc: "We check each campaign needs, verify the events, and ensure donations are allocated correctly.",
   },
   {
     icon: <Users className="w-12 h-12 text-green-700" />,
-    title: "3. Volunteers Respond",
-    desc: "Our trained volunteers go to the field, deliver help, and support communities directly.",
+    title: "3. Volunteers Act",
+    desc: "Our registered volunteers participate in events, deliver help, and support communities directly.",
   },
   {
     icon: <HelpingHand className="w-12 h-12 text-green-700" />,

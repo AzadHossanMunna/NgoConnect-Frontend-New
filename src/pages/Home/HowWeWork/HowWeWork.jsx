@@ -38,32 +38,32 @@ const HowWeWork = () => {
 
             <li className="flex items-start gap-4">
               <Heart className="text-red-500 h-7 w-7" />
-              <p className="text-lg">Donors can track exactly where their money goes.</p>
+              <p className="text-lg">Donors can view their full donation history and project status.</p>
             </li>
 
             <li className="flex items-start gap-4">
               <Users className="text-blue-500 h-7 w-7" />
-              <p className="text-lg">Volunteers earn rewards, certificates, and skill-building opportunities.</p>
+              <p className="text-lg">Volunteers can log service hours and track their contribution.</p>
             </li>
 
             <li className="flex items-start gap-4">
               <HandHeart className="text-green-600 h-7 w-7" />
-              <p className="text-lg">People needing help receive verified support quickly and safely.</p>
+              <p className="text-lg">People needing help receive verified support through campaigns.</p>
             </li>
 
             <li className="flex items-start gap-4">
               <Clock className="text-purple-500 h-7 w-7" />
-              <p className="text-lg">We operate 24/7 to respond to emergencies instantly.</p>
+              <p className="text-lg">Our platform is available 24/7 for donations and volunteer signups.</p>
             </li>
 
             <li className="flex items-start gap-4">
               <FlaskConical className="text-red-400 h-7 w-7" />
-              <p className="text-lg">Blood donation requests & camps handled with live updates.</p>
+              <p className="text-lg">Blood donation events organized regularly for community support.</p>
             </li>
 
             <li className="flex items-start gap-4">
               <Utensils className="text-orange-500 h-7 w-7" />
-              <p className="text-lg">Food donation programs for disaster-hit & underprivileged families.</p>
+              <p className="text-lg">Food donation campaigns for disaster-hit & underprivileged families.</p>
             </li>
 
             <li className="flex items-start gap-4">

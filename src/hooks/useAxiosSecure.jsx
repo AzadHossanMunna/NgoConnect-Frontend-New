@@ -5,6 +5,21 @@ const axiosSecure = axios.create({
   baseURL: API_BASE_URL,
 });
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  
+  failedQueue = [];
+};
+
 // Request interceptor - add access token to headers
 axiosSecure.interceptors.request.use(
   (config) => {
@@ -25,7 +40,20 @@ axiosSecure.interceptors.response.use(
 
     // If error is 401 and we haven't retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
+      
+      if (isRefreshing) {
+        return new Promise(function(resolve, reject) {
+          failedQueue.push({resolve, reject});
+        }).then(token => {
+          originalRequest.headers.Authorization = 'Bearer ' + token;
+          return axiosSecure(originalRequest);
+        }).catch(err => {
+          return Promise.reject(err);
+        });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
         const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
@@ -43,17 +71,26 @@ axiosSecure.interceptors.response.use(
           { refresh: refreshToken }
         );
 
-        const { access } = response.data;
+        const { access, refresh } = response.data;
         localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, access);
+        if (refresh) {
+            localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refresh);
+        }
+
+        axiosSecure.defaults.headers.common['Authorization'] = 'Bearer ' + access;
+        processQueue(null, access);
 
         // Retry original request with new token
         originalRequest.headers.Authorization = `Bearer ${access}`;
         return axiosSecure(originalRequest);
       } catch (refreshError) {
+        processQueue(refreshError, null);
         // Refresh failed, logout user
         localStorage.clear();
         window.location.href = '/login';
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 
@@ -65,4 +102,5 @@ const useAxiosSecure = () => {
   return axiosSecure;
 };
 
+export { axiosSecure };
 export default useAxiosSecure;

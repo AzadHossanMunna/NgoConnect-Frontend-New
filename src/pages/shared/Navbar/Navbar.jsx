@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router';
 import NgoconnectLogo from '../NgoconnectLogo/NgoconnectLogo';
 import useAuth from '../../../hooks/useAuth';
+import Notifications from './Notifications'; // Import Notifications
 
 const Navbar = () => {
    const {user, logOut}  = useAuth();
@@ -46,6 +47,7 @@ const Navbar = () => {
     </ul>
   </div>
   <div className="navbar-end">
+    {user && <Notifications />}
     {
       user?<button onClick={handleLogOut} className='btn btn-primary text-black'>Log Out</button>
       :

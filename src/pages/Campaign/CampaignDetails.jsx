@@ -47,6 +47,7 @@ const CampaignDetails = () => {
   }
 
   const { 
+    id,
     title, 
     description, 
     goal_amount, 
@@ -125,7 +126,7 @@ const CampaignDetails = () => {
                   ) : null}
 
                   <Link 
-                    to={user ? "/SendDonation" : "/login"} 
+                    to={user ? `/SendDonation?campaign=${id}` : "/login"} 
                     state={{ from: `/campaign/${slug}` }}
                     className="btn btn-lg bg-green-600 hover:bg-green-700 text-white w-full shadow-lg hover:shadow-green-200 mt-6 border-none"
                   >

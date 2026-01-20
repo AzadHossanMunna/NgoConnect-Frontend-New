@@ -8,11 +8,13 @@ import BeMerchant from '../BeMerchant/BeMerchant';
 import HowItWorks from '../HowItWorks/HowItWorks';
 import Testimonials from '../Testimonials/Testimonials';
 import FAQSection from '../FAQSection/FAQSection';
+import RecentDonations from '../RecentDonations/RecentDonations';
 
 const Home = () => {
     return (
         <div>
             <Banner></Banner>
+            <RecentDonations />
             <Services></Services>
             <ClientSlider></ClientSlider>
             <BenefitsSection></BenefitsSection>
