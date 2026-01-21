@@ -21,7 +21,7 @@ const faqData = [
   {
     question: "What services does NGOCONNECT offer?",
     answer:
-      "Food donation, blood support, medicine delivery, environmental actions, natural disaster relief, shelter support, and more — 24/7.",
+      "Food donation, blood support, more things,medicine delivery, environmental actions, natural disaster relief, shelter support, and more — 24/7.",
   },
   {
     question: "Is NGOCONNECT free for everyone?",
