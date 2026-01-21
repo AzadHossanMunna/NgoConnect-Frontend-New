@@ -27,7 +27,7 @@ const Navbar = () => {
   </NavLink>
 </li>
 
-<li>
+{/* <li>
   <NavLink
     to="/coverage"
     className={({ isActive }) =>
@@ -40,7 +40,7 @@ const Navbar = () => {
   >
     Coverage
   </NavLink>
-</li>
+</li> */}
 
 <li>
   <NavLink
