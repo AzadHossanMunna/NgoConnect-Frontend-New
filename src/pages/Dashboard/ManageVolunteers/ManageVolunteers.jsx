@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
-import { FaCheck, FaTimes, FaSpinner } from 'react-icons/fa';
+import { FaCheck, FaTimes, FaSpinner, FaEye } from 'react-icons/fa';
 
 const ManageVolunteers = () => {
     const [volunteers, setVolunteers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filterStatus, setFilterStatus] = useState('PENDING'); // PENDING, APPROVED, REJECTED
+    const [processingId, setProcessingId] = useState(null);
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
@@ -33,6 +35,7 @@ const ManageVolunteers = () => {
     };
 
     const handleStatusUpdate = async (volunteerId, newStatus) => {
+        setProcessingId(volunteerId);
         try {
             await axiosSecure.patch(`/api/volunteer/admin/${volunteerId}/`, {
                 application_status: newStatus
@@ -42,6 +45,8 @@ const ManageVolunteers = () => {
         } catch (error) {
             console.error("Error updating status:", error);
             Swal.fire('Error', 'Failed to update status', 'error');
+        } finally {
+            setProcessingId(null);
         }
     };
 
@@ -76,7 +81,7 @@ const ManageVolunteers = () => {
                                 <th>Skills</th>
                                 <th>Availability</th>
                                 <th>Status</th>
-                                {filterStatus === 'PENDING' && <th>Actions</th>}
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,24 +102,36 @@ const ManageVolunteers = () => {
                                                 {vol.application_status}
                                             </span>
                                         </td>
-                                        {filterStatus === 'PENDING' && (
-                                            <td className="flex gap-2">
-                                                <button 
-                                                    className="btn btn-sm btn-success text-white"
-                                                    onClick={() => handleStatusUpdate(vol.user_id, 'APPROVED')}
-                                                    title="Approve"
-                                                >
-                                                    <FaCheck />
-                                                </button>
-                                                <button 
-                                                    className="btn btn-sm btn-error text-white"
-                                                    onClick={() => handleStatusUpdate(vol.user_id, 'REJECTED')}
-                                                    title="Reject"
-                                                >
-                                                    <FaTimes />
-                                                </button>
-                                            </td>
-                                        )}
+                                        <td className="flex gap-2">
+                                            <Link 
+                                                to={`/dashboard/volunteers/${vol.user_id}`}
+                                                className="btn btn-sm btn-ghost text-gray-600"
+                                                title="View Details"
+                                            >
+                                                <FaEye />
+                                            </Link>
+                                            
+                                            {filterStatus === 'PENDING' && (
+                                                <>
+                                                    <button 
+                                                        className="btn btn-sm btn-success text-white"
+                                                        onClick={() => handleStatusUpdate(vol.user_id, 'APPROVED')}
+                                                        title="Approve"
+                                                        disabled={processingId === vol.user_id}
+                                                    >
+                                                        {processingId === vol.user_id ? <span className="loading loading-spinner loading-xs"></span> : <FaCheck />}
+                                                    </button>
+                                                    <button 
+                                                        className="btn btn-sm btn-error text-white"
+                                                        onClick={() => handleStatusUpdate(vol.user_id, 'REJECTED')}
+                                                        title="Reject"
+                                                        disabled={processingId === vol.user_id}
+                                                    >
+                                                        {processingId === vol.user_id ? <span className="loading loading-spinner loading-xs"></span> : <FaTimes />}
+                                                    </button>
+                                                </>
+                                            )}
+                                        </td>
                                     </tr>
                                 ))
                             ) : (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { API_ENDPOINTS } from '../../../config/api.config';
-import { FaEye, FaSearch } from 'react-icons/fa';
+import { FaEye, FaSearch, FaFileDownload } from 'react-icons/fa';
 
 const DonationRequests = () => {
     const [donations, setDonations] = useState([]);
@@ -9,6 +9,9 @@ const DonationRequests = () => {
     const [statusFilter, setStatusFilter] = useState('');
     const [campaigns, setCampaigns] = useState([]);
     const [selectedCampaign, setSelectedCampaign] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [isExporting, setIsExporting] = useState(false);
 
     const axiosSecure = useAxiosSecure();
 
@@ -42,6 +45,33 @@ const DonationRequests = () => {
             console.error("Failed to fetch donations", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleExport = async () => {
+        setIsExporting(true);
+        try {
+            let url = `${API_ENDPOINTS.DONATION_ADMIN}export/?`;
+            if (startDate) url += `start_date=${startDate}&`;
+            if (endDate) url += `end_date=${endDate}&`;
+            if (selectedCampaign) url += `campaign_id=${selectedCampaign}&`;
+
+            const res = await axiosSecure.get(url, { responseType: 'blob' });
+            
+            // Create download link
+            const timestamp = new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14); // YYYYMMDDHHMMSS
+            const fileName = `donations_export_${timestamp}.csv`;
+            const urlBlob = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = urlBlob;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            console.error("Export failed", error);
+        } finally {
+            setIsExporting(false);
         }
     };
 
@@ -85,6 +115,41 @@ const DonationRequests = () => {
                 </div>
             </div>
 
+            {/* Export Section */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-wrap gap-4 items-end">
+                <div className="form-control">
+                    <label className="label py-1">
+                        <span className="label-text font-medium text-xs uppercase text-gray-500">From Date</span>
+                    </label>
+                    <input 
+                        type="date" 
+                        className="input input-bordered input-sm" 
+                        value={startDate}
+                        onChange={e => setStartDate(e.target.value)}
+                    />
+                </div>
+                <div className="form-control">
+                    <label className="label py-1">
+                        <span className="label-text font-medium text-xs uppercase text-gray-500">To Date</span>
+                    </label>
+                    <input 
+                        type="date" 
+                        className="input input-bordered input-sm" 
+                        value={endDate}
+                        onChange={e => setEndDate(e.target.value)}
+                    />
+                </div>
+                
+                <button 
+                    onClick={handleExport}
+                    disabled={isExporting}
+                    className="btn btn-sm btn-success text-white gap-2"
+                >
+                    {isExporting ? <span className="loading loading-spinner loading-xs"></span> : <FaFileDownload />}
+                    Export CSV
+                </button>
+            </div>
+
             {loading ? (
                 <div className="flex justify-center p-10">
                     <span className="loading loading-spinner loading-lg text-green-600"></span>
@@ -124,7 +189,10 @@ const DonationRequests = () => {
                                             </span>
                                         </td>
                                         <td className="text-sm">
-                                            {new Date(donation.created_at || donation.transaction_date).toLocaleDateString()}
+                                            {new Date(donation.timestamp || donation.updated_at).toLocaleDateString()}
+                                            <div className="text-xs text-gray-400">
+                                                {new Date(donation.timestamp || donation.updated_at).toLocaleTimeString()}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))

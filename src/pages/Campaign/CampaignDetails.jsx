@@ -51,6 +51,8 @@ const CampaignDetails = () => {
     title, 
     description, 
     goal_amount, 
+    current_amount,
+    progress_percentage,
     budget_allocated, 
     start_date, 
     end_date, 
@@ -111,11 +113,26 @@ const CampaignDetails = () => {
             <div className="md:col-span-1 p-8 bg-gray-50/50">
               <div className="sticky top-8 space-y-8">
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                  <div className="text-center mb-6">
-                    <p className="text-gray-500 text-sm font-medium uppercase tracking-wide">Goal Amount</p>
-                    <p className="text-4xl font-extrabold text-green-600 mt-2">
-                      ৳{Number(goal_amount).toLocaleString()}
-                    </p>
+                  <div className="mb-6">
+                    <p className="text-gray-500 text-sm font-medium uppercase tracking-wide">Raised Amount</p>
+                    <div className="flex items-baseline gap-1 mt-2">
+                        <span className="text-4xl font-extrabold text-green-600">
+                            ৳{Number(current_amount || 0).toLocaleString()}
+                        </span>
+                        <span className="text-gray-400 font-medium">
+                            of ৳{Number(goal_amount).toLocaleString()}
+                        </span>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="mt-4 w-full bg-gray-200 rounded-full h-3">
+                        <div 
+                        className="bg-green-600 h-3 rounded-full transition-all duration-500 relative" 
+                        style={{ width: `${Math.min(progress_percentage || 0, 100)}%` }}
+                        >
+                        </div>
+                    </div>
+                    <p className="text-right text-sm text-gray-500 mt-1 font-semibold">{progress_percentage}% Funded</p>
                   </div>
                   
                   {user?.role === 'admin' || user?.role === 'manager' ? (

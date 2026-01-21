@@ -30,10 +30,16 @@ const Register = () => {
       setShowOTPModal(true);
     } catch (error) {
       console.error('Registration error:', error);
-      const errorMessage = error.response?.data?.detail 
-        || error.response?.data?.email?.[0]
-        || error.response?.data?.password?.[0]
+      const data = error.response?.data;
+      
+      // Check for specific field errors or non-field errors
+      const errorMessage = data?.non_field_errors?.[0]
+        || data?.email?.[0]
+        || data?.password?.[0]
+        || data?.first_name?.[0]
+        || data?.detail
         || 'Registration failed. Please try again.';
+      
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -94,7 +100,11 @@ const Register = () => {
               <label className="label text-green-700">Password</label>
               <input
                 type="password"
-                {...register('password', { required: true, minLength: 6 })}
+                {...register('password', { 
+                  required: true, 
+                  minLength: 8,
+                  pattern: /(?=.*\d)/ 
+                })}
                 className="input input-bordered"
                 placeholder="Password"
               />
@@ -103,7 +113,12 @@ const Register = () => {
               )}
               {errors.password?.type === 'minLength' && (
                 <p className='text-red-500'>
-                  Password must be at least 6 characters
+                  Password must be at least 8 characters
+                </p>
+              )}
+              {errors.password?.type === 'pattern' && (
+                <p className='text-red-500'>
+                  Password must contain at least one digit
                 </p>
               )}
 

@@ -11,6 +11,7 @@ const RecentDonations = () => {
         const fetchDonations = async () => {
             try {
                 const res = await axios.get(`${API_BASE_URL}${API_ENDPOINTS.DONATION_PUBLIC}`);
+                console.log("Recent Donations Data:", res.data);
                 // Assuming response is a list or { results: [] }
                 setDonations(Array.isArray(res.data) ? res.data : res.data.results || []);
             } catch (error) {
@@ -24,6 +25,16 @@ const RecentDonations = () => {
     }, []);
 
     if (loading || donations.length === 0) return null;
+
+    const getDonorName = (donation) => {
+        return donation.donor_name_display || 
+               donation.guest_name || 
+               donation.donor_name || 
+               donation.name || 
+               (donation.user?.first_name ? `${donation.user.first_name} ${donation.user.last_name || ''}` : null) ||
+               (donation.user_name) ||
+               "Anonymous";
+    };
 
     return (
         <section className="py-12 bg-gray-50">
@@ -41,9 +52,11 @@ const RecentDonations = () => {
                                 {donation.avatar ? <img src={donation.avatar} alt="avatar" /> : <FaUserCircle />}
                             </div>
                             <div>
-                                <h4 className="font-bold text-gray-800">{donation.guest_name || donation.donor_name || "Anonymous"}</h4>
+                                <h4 className="font-bold text-gray-800">{getDonorName(donation)}</h4>
                                 <p className="text-sm text-gray-500">Donated <span className="text-green-600 font-semibold">{donation.amount} BDT</span></p>
-                                {/* <p className="text-xs text-gray-400">{new Date(donation.created_at).toLocaleDateString()}</p> */}
+                                {donation.timestamp && (
+                                    <p className="text-xs text-gray-400">{new Date(donation.timestamp).toLocaleDateString()}</p>
+                                )}
                             </div>
                         </div>
                     ))}

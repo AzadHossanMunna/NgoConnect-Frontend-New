@@ -233,7 +233,8 @@ const Profile = () => {
                 type="password"
                 {...registerPassword('new_password', { 
                   required: 'New password is required',
-                  minLength: { value: 6, message: 'Password must be at least 6 characters' }
+                  minLength: { value: 8, message: 'Password must be at least 8 characters' },
+                  pattern: { value: /(?=.*\d)/, message: 'Password must contain at least one digit' }
                 })}
                 className="input input-bordered focus:input-success"
               />

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layouts/RootLayout";
 import Home from "../pages/Home/Home/Home";
 import AuthLayout from "../layouts/AuthLayout";
@@ -18,6 +18,7 @@ import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
 import ApplyVolunteer from "../pages/Dashboard/Volunteer/ApplyVolunteer";
 import MyTimeLogs from "../pages/Dashboard/Volunteer/MyTimeLogs";
 import ManageVolunteers from "../pages/Dashboard/ManageVolunteers/ManageVolunteers";
+import VolunteerDetails from "../pages/Dashboard/ManageVolunteers/VolunteerDetails";
 import ManageTasks from "../pages/Dashboard/ManageTasks/ManageTasks";
 import MyTasks from "../pages/Dashboard/Volunteer/MyTasks";
 import DonationRequests from "../pages/Dashboard/DonationRequests/DonationRequests";
@@ -26,6 +27,12 @@ import VolunteerEvents from "../pages/Dashboard/VolunteerEvents/VolunteerEvents"
 
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import PaymentFail from "../pages/Payment/PaymentFail";
+import ForgotPassword from "../pages/Authentication/ForgotPassword/ForgotPassword";
+import ResetPassword from "../pages/Authentication/ResetPassword/ResetPassword";
+import About from "../pages/About/About";
+import Contact from "../pages/Contact/Contact";
+import NotFound from "../pages/shared/NotFound/NotFound";
+import PrivacyPolicy from "../pages/shared/Legal/PrivacyPolicy";
 
 import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome"; // Import the component
 
@@ -33,6 +40,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />, // changed from Component
+    errorElement: <NotFound />,
     children: [
       {
         index: true,
@@ -41,6 +49,22 @@ export const router = createBrowserRouter([
       {
         path: 'coverage',
         element: <Coverage />, // changed from Component
+      },
+      {
+        path: 'about',
+        element: <About />
+      },
+      {
+        path: 'contact',
+        element: <Contact />
+      },
+      {
+        path: 'privacy',
+        element: <PrivacyPolicy />
+      },
+      {
+        path: '*',
+        element: <NotFound />
       },
       {
        path:'campaign',
@@ -56,6 +80,10 @@ export const router = createBrowserRouter([
       },
       {
         path: 'payment/success',
+        element: <PaymentSuccess />
+      },
+      {
+        path: 'donation_success',
         element: <PaymentSuccess />
       },
       {
@@ -82,6 +110,14 @@ export const router = createBrowserRouter([
         element: <Register />, // changed from Component
       }
     ],
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />
   },
 
   {
@@ -135,6 +171,10 @@ export const router = createBrowserRouter([
       {
         path: 'volunteers',
         element: <ManageVolunteers />
+      },
+      {
+        path: 'volunteers/:id',
+        element: <VolunteerDetails />
       },
       {
         path: 'tasks',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router';
+import { Outlet } from 'react-router-dom';
 import authImg from '../assets/authImage.png'
 import NgoconnectLogo from '../pages/shared/NgoconnectLogo/NgoconnectLogo';
 

@@ -15,6 +15,8 @@ export const API_ENDPOINTS = {
   // User Profile
   PROFILE: '/api/user/profile/',
   CHANGE_PASSWORD: '/api/user/change-password/',
+  FORGOT_PASSWORD: '/api/user/forgot-password/',
+  RESET_PASSWORD: '/api/user/reset-password/',
   MY_DONATIONS: '/api/user/profile/donations/',
 
   // Projects / Campaigns
@@ -28,6 +30,9 @@ export const API_ENDPOINTS = {
 
   // Dashboard
   DASHBOARD_SUMMARY: '/api/user/dashboard/summary/',
+  
+  // Core
+  CONTACT: '/api/core/contact/',
 };
 
 // Storage keys

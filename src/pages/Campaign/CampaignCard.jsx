@@ -7,6 +7,8 @@ const CampaignCard = ({ campaign }) => {
     title, 
     description, 
     goal_amount, 
+    current_amount,
+    progress_percentage,
     status, 
     end_date,
     slug 
@@ -38,14 +40,17 @@ const CampaignCard = ({ campaign }) => {
         </p>
 
         <div className="mt-auto space-y-4">
-          <div className="bg-green-50 p-3 rounded-lg flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <FaBullseye className="text-green-600" />
-              <span className="text-sm font-semibold text-gray-700">Goal:</span>
-            </div>
-            <span className="text-lg font-bold text-green-700">
-              ৳{Number(goal_amount).toLocaleString()}
-            </span>
+          {/* Progress Bar */}
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+            <div 
+              className="bg-green-600 h-2.5 rounded-full transition-all duration-500" 
+              style={{ width: `${Math.min(progress_percentage || 0, 100)}%` }}
+            ></div>
+          </div>
+          
+          <div className="flex justify-between text-sm mb-4">
+             <span className="font-bold text-green-700">৳{Number(current_amount || 0).toLocaleString()} raised</span>
+             <span className="text-gray-500">of ৳{Number(goal_amount).toLocaleString()}</span>
           </div>
 
           <Link 

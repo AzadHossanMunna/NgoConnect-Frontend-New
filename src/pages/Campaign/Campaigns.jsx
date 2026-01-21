@@ -7,7 +7,7 @@ import { FaFilter } from 'react-icons/fa';
 const Campaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState('ACTIVE');
+  const [statusFilter, setStatusFilter] = useState('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -15,9 +15,12 @@ const Campaigns = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get(
-          `${API_BASE_URL}${API_ENDPOINTS.CAMPAIGNS}?status=${statusFilter}`
-        );
+        let url = `${API_BASE_URL}${API_ENDPOINTS.CAMPAIGNS}`;
+        if (statusFilter) {
+            url += `?status=${statusFilter}`;
+        }
+        
+        const res = await axios.get(url);
         setCampaigns(res.data);
       } catch (error) {
         console.error('Error fetching campaigns:', error);
@@ -31,6 +34,7 @@ const Campaigns = () => {
   }, [statusFilter]);
 
   const filterOptions = [
+    { label: 'All', value: '' },
     { label: 'Active', value: 'ACTIVE' },
     { label: 'Planned', value: 'PLANNED' },
     { label: 'Completed', value: 'COMPLETED' },
@@ -82,7 +86,9 @@ const Campaigns = () => {
         ) : campaigns.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-xl shadow-sm">
             <h3 className="text-2xl font-bold text-gray-400">No campaigns found</h3>
-            <p className="text-gray-500 mt-2">There are currently no {statusFilter.toLowerCase()} campaigns.</p>
+            <p className="text-gray-500 mt-2">
+                {statusFilter ? `There are currently no ${statusFilter.toLowerCase()} campaigns.` : 'No campaigns available at the moment.'}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

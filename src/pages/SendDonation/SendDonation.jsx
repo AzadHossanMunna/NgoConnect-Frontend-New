@@ -94,7 +94,13 @@ export default function DonateForm() {
 
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.detail || err.response?.data?.error || err.message || "Failed to initiate payment");
+      const data = err.response?.data;
+      const errorMsg = data?.amount?.[0]
+          || data?.guest_email?.[0] 
+          || data?.non_field_errors?.[0]
+          || data?.detail 
+          || "Failed to initiate payment";
+      setError(errorMsg);
     } finally {
       setIsLoading(false);
     }

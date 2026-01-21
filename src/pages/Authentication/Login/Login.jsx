@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../../hooks/useAuth';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -20,8 +20,10 @@ const Login = () => {
             navigate(location?.state || '/');
         } catch (error) {
             console.error('Login error:', error);
-            const errorMessage = error.response?.data?.detail 
-                || error.response?.data?.error 
+            const data = error.response?.data;
+            const errorMessage = data?.non_field_errors?.[0] 
+                || data?.detail 
+                || data?.error 
                 || 'Login failed. Please check your credentials.';
             toast.error(errorMessage);
         } finally {
@@ -53,7 +55,7 @@ const Login = () => {
                     <label className="label text-green-700">Password</label>
                     <input
                         type="password"
-                        {...register('password', { required: true, minLength: 6 })}
+                        {...register('password', { required: true, minLength: 8 })}
                         className="input input-bordered"
                         placeholder="Password"
                     />
@@ -63,11 +65,11 @@ const Login = () => {
                     }
                     {
                         errors.password?.type === 'minLength' &&
-                        <p className='text-red-500'>Password must be 6 characters or longer</p>
+                        <p className='text-red-500'>Password must be 8 characters or longer</p>
                     }
 
                     <div>
-                        <a className="link link-hover text-green-600">Forgot password?</a>
+                        <Link to="/forgot-password" className="link link-hover text-green-600">Forgot password?</Link>
                     </div>
 
                     <button 

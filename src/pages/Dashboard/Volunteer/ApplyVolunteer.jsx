@@ -31,7 +31,7 @@ const ApplyVolunteer = () => {
             await axiosSecure.post('/api/volunteer/apply/', data);
             Swal.fire({
                 title: 'Application Submitted!',
-                text: 'Your application to become a volunteer has been submitted successfully.',
+                text: 'Application submitted! Our team has been notified. We will email you once your application status is updated.',
                 icon: 'success'
             });
             // Optionally refresh profile if the backend changes status immediately (usually it's pending)

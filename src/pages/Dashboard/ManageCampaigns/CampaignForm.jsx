@@ -9,7 +9,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 const CampaignForm = () => {
     const { slug } = useParams();
     const isEditMode = !!slug;
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, setError, formState: { errors } } = useForm();
     const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -50,8 +50,34 @@ const CampaignForm = () => {
             navigate('/dashboard/campaigns');
         } catch (error) {
             console.error(error);
-            const msg = error.response?.data?.detail || 'Something went wrong';
-            toast.error(msg);
+            const data = error.response?.data;
+            let hasFieldErrors = false;
+
+            // Handle date errors (end_date)
+            if (data?.end_date) {
+                setError('end_date', { type: 'server', message: data.end_date[0] });
+                hasFieldErrors = true;
+            }
+            // Handle title errors
+            if (data?.title) {
+                 setError('title', { type: 'server', message: data.title[0] });
+                 hasFieldErrors = true;
+            }
+            // Handle description errors
+             if (data?.description) {
+                 setError('description', { type: 'server', message: data.description[0] });
+                 hasFieldErrors = true;
+            }
+             // Handle goal errors
+             if (data?.goal_amount) {
+                 setError('goal_amount', { type: 'server', message: data.goal_amount[0] });
+                 hasFieldErrors = true;
+            }
+
+            const msg = data?.detail || data?.non_field_errors?.[0] || 'Something went wrong';
+            if (!hasFieldErrors || msg !== 'Something went wrong') {
+                 toast.error(msg);
+            }
         } finally {
             setLoading(false);
         }
