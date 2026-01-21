@@ -34,6 +34,8 @@ import Contact from "../pages/Contact/Contact";
 import NotFound from "../pages/shared/NotFound/NotFound";
 import PrivacyPolicy from "../pages/shared/Legal/PrivacyPolicy";
 
+
+
 import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome"; // Import the component
 
 export const router = createBrowserRouter([
@@ -46,6 +48,7 @@ export const router = createBrowserRouter([
         index: true,
         element: <Home />, // changed from Component
       },
+
       {
         path: 'coverage',
         element: <Coverage />, // changed from Component
@@ -54,6 +57,9 @@ export const router = createBrowserRouter([
         path: 'about',
         element: <About />
       },
+    
+
+
       {
         path: 'contact',
         element: <Contact />

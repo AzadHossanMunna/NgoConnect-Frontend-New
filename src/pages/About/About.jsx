@@ -17,11 +17,14 @@ const About = () => {
     ];
 
     const teamMembers = [
-        { name: "Sarah Johnson", role: "Founder & CEO", img: "https://i.pravatar.cc/150?img=1" },
-        { name: "David Chen", role: "Head of Operations", img: "https://i.pravatar.cc/150?img=11" },
-        { name: "Amina Khan", role: "Community Lead", img: "https://i.pravatar.cc/150?img=5" },
-        { name: "Michael Ross", role: "Volunteer Coordinator", img: "https://i.pravatar.cc/150?img=3" },
-    ];
+  { name: "Mohammad Ariful Islam", role: "Founder & CEO", img: "/dist/assets/20251206_063526.jpg.jpeg" },
+  { name: "Md. Azad Hossan Munna", role: "Head of Operations", img: "/dist/assets/WhatsApp Image 2026-01-21 at 17.20.21.jpeg" },
+  { name: "Sadhon Kumar Dev", role: "Community Lead", img: "/dist/assets/WhatsApp Image 2026-01-21 at 18.32.22.jpeg" },
+  { name: "Sujoy Sarkar", role: "Volunteer Coordinator", img: "/dist/assets/WhatsApp Image 2025-01-28 at 23.30.13_7420dc17.jpg.jpeg" },
+  { name: "Tanvir Ahammad Riyad", role: "Fundraising Manager", img: "/dist/assets/IMG_20260121_155741.jpg.jpeg" },
+  { name: "Sorfaraz Sazid", role: "Marketing & Outreach Lead", img: "/dist/assets/IMG-20241018-WA0014.jpg.jpeg" },
+];
+
 
     return (
         <div className="font-sans overflow-hidden">
@@ -99,38 +102,39 @@ const About = () => {
 
             {/* Our Team */}
             <section className="py-20 px-4 bg-gray-50">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <span className="text-green-600 font-bold tracking-wider uppercase">The Minds Behind</span>
-                        <h2 className="text-4xl font-bold text-gray-800 mt-2">Meet Our Team</h2>
-                    </div>
+  <div className="max-w-7xl mx-auto">
+    {/* Section Header */}
+    <div className="text-center mb-16">
+      <span className="text-green-600 font-bold tracking-wider uppercase">The Minds Behind</span>
+      <h2 className="text-4xl font-bold text-gray-800 mt-2">Meet Our Team</h2>
+    </div>
 
-                    <div className="grid md:grid-cols-4 gap-8">
-                        {teamMembers.map((member, index) => (
-                            <div key={index} data-aos="fade-up" data-aos-delay={index * 100} className="group">
-                                <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2">
-                                    <div className="h-64 overflow-hidden">
-                                        <img 
-                                            src={member.img} 
-                                            alt={member.name} 
-                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        />
-                                    </div>
-                                    <div className="p-6 text-center">
-                                        <h3 className="text-xl font-bold text-gray-800">{member.name}</h3>
-                                        <p className="text-green-600 font-medium">{member.role}</p>
-                                        <div className="flex justify-center gap-4 mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            {/* Social placeholders */}
-                                            <button className="w-8 h-8 rounded-full bg-gray-100 hover:bg-blue-500 hover:text-white transition-colors">in</button>
-                                            <button className="w-8 h-8 rounded-full bg-gray-100 hover:bg-blue-400 hover:text-white transition-colors">tw</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+    {/* Team Grid */}
+    <div className="grid md:grid-cols-3 gap-8"> {/* <-- changed from 4 to 3 */}
+      {teamMembers.map((member, index) => (
+        <div key={index} data-aos="fade-up" data-aos-delay={index * 100} className="group">
+          <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2">
+            <div className="h-64 overflow-hidden">
+              <img 
+                src={member.img} 
+                alt={member.name} 
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+            </div>
+            <div className="p-6 text-center">
+              <h3 className="text-xl font-bold text-gray-800">{member.name}</h3>
+              <p className="text-green-600 font-medium">{member.role}</p>
+              <div className="flex justify-center gap-4 mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {/* Social placeholders */}
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 
             {/* Call to Action */}
             <section className="py-20 px-4">

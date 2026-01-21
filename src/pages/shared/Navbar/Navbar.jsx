@@ -12,11 +12,83 @@ const Navbar = () => {
       .catch(error=>console.log(error))
    }
     const navItems =<>
-    <li><NavLink to="/">Home</NavLink></li>  
-    <li><NavLink to="/coverage">Coverage</NavLink></li>  
-    <li><NavLink to="/sendDonation">Donate</NavLink></li>  
-    <li><NavLink to="/about">About Us</NavLink></li>  
-    <li><NavLink to="/campaign">Campaign</NavLink></li> 
+     <li>
+  <NavLink
+    to="/"
+    className={({ isActive }) =>
+      `px-4 py-2 rounded-xl transition-colors duration-300 font-medium ${
+        isActive
+          ? "bg-green-500 text-white"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`
+    }
+  >
+    Home
+  </NavLink>
+</li>
+
+<li>
+  <NavLink
+    to="/coverage"
+    className={({ isActive }) =>
+      `px-4 py-2 rounded-xl transition-colors duration-300 font-medium ${
+        isActive
+          ? "bg-green-500 text-white"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`
+    }
+  >
+    Coverage
+  </NavLink>
+</li>
+
+<li>
+  <NavLink
+    to="/sendDonation"
+    className={({ isActive }) =>
+      `px-4 py-2 rounded-xl transition-colors duration-300 font-medium ${
+        isActive
+          ? "bg-green-500 text-white"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`
+    }
+  >
+    Donate
+  </NavLink>
+</li>
+
+<li>
+  <NavLink
+    to="/about"
+    className={({ isActive }) =>
+      `px-4 py-2 rounded-xl transition-colors duration-300 font-medium ${
+        isActive
+          ? "bg-green-500 text-white"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`
+    }
+  >
+    About Us
+  </NavLink>
+</li>
+
+
+
+<li>
+  <NavLink
+    to="/campaign"
+    className={({ isActive }) =>
+      `px-4 py-2 rounded-xl transition-colors duration-300 font-medium ${
+        isActive
+          ? "bg-green-500 text-white"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`
+    }
+  >
+    Campaign
+  </NavLink>
+</li>
+
      {
             user && <>
                 <li><NavLink to="/dashboard">Dashboard</NavLink></li>
@@ -36,9 +108,10 @@ const Navbar = () => {
         {navItems}
       </ul>
     </div>
-    <Link to="/" className="btn btn-ghost text-xl">
-  NGOConnect
+   <Link to="/" className="btn btn-ghost p-0">
+  <NgoconnectLogo className="h-10 w-auto" />
 </Link>
+
 
   </div>
   <div className="navbar-center hidden lg:flex">

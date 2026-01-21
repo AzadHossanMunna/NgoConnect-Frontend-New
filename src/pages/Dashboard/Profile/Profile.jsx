@@ -45,17 +45,20 @@ const Profile = () => {
       setValue('last_name', data.last_name);
       
       // If volunteer, get volunteer details
-      if (data.role === 'volunteer') {
-         try {
-             const vRes = await axiosSecure.get('/api/volunteer/profile/');
-             const vData = vRes.data;
-             setVolunteerProfile(vData);
-             setVolunteerValue('skills', vData.skills);
-             setVolunteerValue('availability', vData.availability);
-         } catch (vErr) {
-             console.error("Failed to load volunteer profile", vErr);
-         }
-      }
+     if (data.role === 'volunteer') {
+  try {
+    const { data: volunteerData } = await axiosSecure.get(
+      '/api/volunteer/profile/'
+    );
+
+    setVolunteerProfile(volunteerData);
+    setVolunteerValue('skills', volunteerData.skills);
+    setVolunteerValue('availability', volunteerData.availability);
+  } catch (error) {
+    console.error('Failed to load volunteer profile', error);
+  }
+}
+
 
       setIsLoading(false);
     } catch (error) {
@@ -144,32 +147,74 @@ const Profile = () => {
       <div className="grid md:grid-cols-2 gap-8">
         {/* Volunteer Profile Section - Only if volunteer */}
         {profile?.role === 'volunteer' && (
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 md:col-span-2 border-l-4 border-l-green-500">
-                <h3 className="text-xl font-semibold text-gray-800 mb-6">Volunteer Information</h3>
-                <form onSubmit={handleSubmitVolunteer(onUpdateVolunteerProfile)} className="space-y-4">
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text">Skills</span>
-                        </label>
-                        <textarea 
-                            className="textarea textarea-bordered" 
-                            {...registerVolunteer('skills', { required: 'Skills are required' })}
-                        ></textarea>
-                    </div>
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text">Availability</span>
-                        </label>
-                        <input 
-                            type="text" 
-                            className="input input-bordered" 
-                            {...registerVolunteer('availability', { required: 'Availability is required' })}
-                        />
-                    </div>
-                     <button className="btn bg-green-600 text-white w-full">Update Volunteer Info</button>
-                </form>
-            </div>
-        )}
+  <div className="bg-white p-6 md:p-8 rounded-2xl shadow-md border border-gray-200 md:col-span-2 border-l-4 border-l-green-500">
+    
+    <h3 className="text-xl md:text-2xl font-semibold text-gray-800 mb-6">
+      Volunteer Information
+    </h3>
+
+   <form
+  onSubmit={handleSubmitVolunteer(onUpdateVolunteerProfile)}
+  className="space-y-7"
+>
+  {/* Skills */}
+  <div className="form-control">
+    <div className="flex items-center mb-2">
+      <div className="w-2 h-5 bg-green-500 rounded-full mr-3"></div>
+      <label className="label p-0">
+        <span className="label-text font-semibold text-gray-900 text-base">
+          Skills
+        </span>
+      </label>
+    </div>
+    <textarea
+      className="textarea textarea-bordered h-32 resize-none rounded-xl border-gray-200 bg-white focus:border-green-400 focus:ring-3 focus:ring-green-100 transition-all duration-300 shadow-sm hover:shadow"
+      placeholder="e.g. Teaching, First Aid, Event Management"
+      {...registerVolunteer('skills', {
+        required: 'Skills are required',
+      })}
+    />
+  </div>
+
+  {/* Availability */}
+  <div className="form-control">
+    <div className="flex items-center mb-2">
+      <div className="w-2 h-5 bg-green-500 rounded-full mr-3"></div>
+      <label className="label p-0">
+        <span className="label-text font-semibold text-gray-900 text-base">
+          Availability
+        </span>
+      </label>
+    </div>
+    <input
+      type="text"
+      className="input input-bordered rounded-xl border-gray-200 bg-white focus:border-green-400 focus:ring-3 focus:ring-green-100 transition-all duration-300 shadow-sm hover:shadow"
+      placeholder="e.g. Weekends, Evenings"
+      {...registerVolunteer('availability', {
+        required: 'Availability is required',
+      })}
+    />
+  </div>
+
+  {/* Button */}
+  <div className="pt-4">
+    <button
+      type="submit"
+      className="btn w-full bg-gradient-to-r from-green-500 to-emerald-600 border-none text-white hover:from-green-600 hover:to-emerald-700 transition-all duration-300 rounded-xl font-semibold py-4 shadow-md hover:shadow-xl transform hover:-translate-y-1 active:translate-y-0"
+    >
+      <span className="flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+        Update Volunteer Profile
+      </span>
+    </button>
+  </div>
+</form>
+
+  </div>
+)}
+
 
         {/* Update Profile Form */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
