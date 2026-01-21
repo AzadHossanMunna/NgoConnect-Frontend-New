@@ -4,7 +4,7 @@ import Home from "../pages/Home/Home/Home";
 import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/Authentication/Login/Login";
 import Register from "../pages/Authentication/Register/Register";
-import Coverage from "../pages/Coverage/coverage";
+import CoverageMap from "../pages/Coverage/coverage";
 import PrivateRoute from "../routes/privateRoute";
 import SendDonation from "../pages/SendDonation/SendDonation";
 import MyDonations from "../pages/Dashboard/MyDonations/MyDonations";
@@ -51,7 +51,7 @@ export const router = createBrowserRouter([
 
       {
         path: 'coverage',
-        element: <Coverage />, // changed from Component
+        element: <CoverageMap />, // changed from Component
       },
       {
         path: 'about',
