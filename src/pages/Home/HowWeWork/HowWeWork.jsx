@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Heart, Users, HandHeart, Clock, Leaf, Utensils, FlaskConical } from "lucide-react";
+import groupImage from "/src/assets/brands/group.jpg"; // Import the image
 
 const HowWeWork = () => {
   return (
@@ -15,7 +16,7 @@ const HowWeWork = () => {
           className="flex justify-center"
         >
           <img
-            src="/src/assets/brands/group.jpg"
+            src={groupImage}  // Use imported image variable
             alt="How We Work"
             className="w-80 md:w-96 drop-shadow-lg rounded-xl"
           />
