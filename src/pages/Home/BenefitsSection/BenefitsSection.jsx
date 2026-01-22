@@ -1,6 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { HeartHandshake, Users, ShieldCheck } from "lucide-react";
+import donationImg from "/src/assets/banner/donation.jpg";
+import volunteerImg from "/src/assets/banner/volunteer.png";
+import neededImg from "/src/assets/banner/needed.jpg";
 
 const benefits = [
   {
@@ -8,7 +11,7 @@ const benefits = [
     icon: HeartHandshake,
     description:
       "Donors enjoy full transparency, live activity updates, and detailed reports showing how their contributions are used. Every donation is tracked, verified, and directly connected to real impact stories.",
-    image: "/src/assets/banner/donation.jpg",
+    image: donationImg,
     highlights: [
       "Track every expense",
       "Get monthly impact reports",
@@ -20,7 +23,7 @@ const benefits = [
     icon: Users,
     description:
       "Volunteers gain verified experience, certificates, and community recognition. They can join missions like food distribution, blood camps, rescue work, teaching, and environmental activities.",
-    image: "/src/assets/banner/volunteer.png",
+    image: volunteerImg,
     highlights: [
       "Earn volunteer certificates",
       "Real-world experience",
@@ -32,7 +35,7 @@ const benefits = [
     icon: ShieldCheck,
     description:
       "People receive quick and verified help from trusted donors and volunteers. Assistance includes blood donations, emergency food, medical support, shelter arrangements, and more.",
-    image: "/src/assets/banner/needed.jpg",
+    image: neededImg,
     highlights: [
       "Fast emergency response",
       "Verified support system",

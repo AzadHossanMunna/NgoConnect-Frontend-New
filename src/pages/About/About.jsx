@@ -8,8 +8,8 @@ import arifulImg from '/src/assets/brands/20251206_063526.jpg.jpeg';
 import azadImg from '/src/assets/brands/WhatsApp Image 2026-01-21 at 17.20.21.jpeg';
 import sadhonImg from '/src/assets/brands/WhatsApp Image 2026-01-21 at 18.32.22.jpeg';
 import sujoyImg from '/src/assets/brands/WhatsApp Image 2025-01-28 at 23.30.13_7420dc17.jpg.jpeg';
-import tanvirImg from '/src/assets/brands/IMG-20241018-WA0014.jpg.jpeg';
-import sorfarazImg from '/src/assets/brands/IMG_20260121_155741.jpg.jpeg';
+import tanvirImg from '/src/assets/brands/IMG_20260121_155741.jpg.jpeg';
+import sorfarazImg from '/src/assets/brands/IMG-20241018-WA0014.jpg.jpeg';
 
 const About = () => {
     useEffect(() => {
